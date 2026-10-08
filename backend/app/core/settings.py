@@ -23,7 +23,7 @@ class DbSettings(BaseModel):
     name: str = Field(..., min_length=1, description="数据库名")
     driver: str = Field(default="postgresql+asyncpg", description="数据库驱动")
 
-    @computed_field # type: ignore[prop-decorator]
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def url(self) -> str:
         pwd = self.hashed_password.get_secret_value()
@@ -40,7 +40,7 @@ class RedisSettings(BaseModel):
     db: int = Field(default=0, ge=0, description="redis数据库")
     hashed_password: SecretStr = Field(..., description="redis密码")
 
-    @computed_field # type: ignore[prop-decorator]
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def url(self) -> str:
         pwd = self.hashed_password.get_secret_value()
