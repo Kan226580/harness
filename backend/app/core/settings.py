@@ -13,6 +13,7 @@ EnvName = Literal["dev", "test", "prod"]
 
 class DbSettings(BaseModel):
     """PostgreSQL settings"""
+
     model_config = ConfigDict(extra="forbid")
 
     host: str = Field(..., min_length=1, description="数据库主机")
@@ -26,13 +27,12 @@ class DbSettings(BaseModel):
     @property
     def url(self) -> str:
         pwd = self.hashed_password.get_secret_value()
-        return (f"{self.driver}://"
-                f"{self.username}:{pwd}"
-                f"@{self.host}:{self.port}/{self.name}")
+        return f"{self.driver}://{self.username}:{pwd}@{self.host}:{self.port}/{self.name}"
 
 
 class RedisSettings(BaseModel):
     """Redis settings"""
+
     model_config = ConfigDict(extra="forbid")
 
     host: str = Field(..., min_length=1, description="redis主机")
@@ -49,6 +49,7 @@ class RedisSettings(BaseModel):
 
 class Settings(BaseSettings):
     """应用配置根模型"""
+
     model_config = SettingsConfigDict(
         env_file=BASE_DIR / ".env",
         env_file_encoding="utf-8",
@@ -63,6 +64,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
-if __name__ == '__main__':
-    print(BASE_DIR)

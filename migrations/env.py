@@ -24,10 +24,7 @@ database_url = settings.db.url
 # -----
 
 # ----- configparser 会插值，% 需要转义
-config.set_main_option(
-    "sqlalchemy.url",
-    database_url.replace("%", "%%")
-)
+config.set_main_option("sqlalchemy.url", database_url.replace("%", "%%"))
 # -----
 
 # add your model's MetaData object here
@@ -65,7 +62,7 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         include_schemas=True,
         dialect_opts={"paramstyle": "named"},
-        compare_type=True, # ----- 可选：检测字段类型变化
+        compare_type=True,  # ----- 可选：检测字段类型变化
     )
 
     with context.begin_transaction():
@@ -89,7 +86,7 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
-            compare_type=True, # ----- 可选：检测字段类型变化
+            compare_type=True,  # ----- 可选：检测字段类型变化
         )
 
         with context.begin_transaction():
