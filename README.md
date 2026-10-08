@@ -2,6 +2,9 @@
 
 > 用于标书写作的Harness架构agent。
 
+## 项目状态
+设计完成，正在实现中。
+
 ## 简介
 
 - 业务背景：现有工作通常涉及大量招标文件阅读、企业资料查询、历史文本复用、评分项检查和 Word 排版。
@@ -17,3 +20,11 @@
 - 提高针对性
 - 降低遗漏与误用
 - 便于协作复核
+
+## 技术栈
+后端：Python 3.12、FastAPI、PostgreSQL、Redis、Celery
+前端：React、TypeScript、Vite
+部署：Docker Compose、Nginx
+
+## 本地启动
+（随着开发进度补充）
