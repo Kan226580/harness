@@ -30,6 +30,35 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    env:
+      ENV: test
+      DB__HOST: 127.0.0.1
+      DB__PORT: "5432"
+      DB__USERNAME: harness
+      DB__HASHED_PASSWORD: dev_only_password
+      DB__DRIVER: postgresql+asyncpg
+      DB__NAME: harness
+      REDIS__HOST: 127.0.0.1
+      REDIS__PORT: "6379"
+      REDIS__DB: "0"
+      REDIS__HASHED_PASSWORD: ci_only_not_a_secret
+      HARNESS_TEST_DB_NAME: harness_test
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17          # 与 deploy/compose.yaml 保持一致
+        env:
+          POSTGRES_USER: harness
+          POSTGRES_PASSWORD: dev_only_password
+          POSTGRES_DB: harness
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U harness"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
     steps:
       - name: 检出代码
         uses: actions/checkout@v7
