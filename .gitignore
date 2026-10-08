@@ -1,2 +1,22 @@
+# Python 相关：虚拟环境、缓存、编译产物
+/.venv/
+/__pycache__/
+/*.pyc
+/.pytest_cache/
+/.mypy_cache/
+/.ruff_cache/
+
+# 前端相关：依赖目录和构建产物
+/node_modules/
+/dist/
+/coverage/
+
+# 环境与数据：密钥文件、日志、本地数据
+/.env
+/*.log
+/var/
+
+# 编辑器与系统：个人配置和系统临时文件
 /.idea/
-/docs/dev/
+/Thumbs.db
+/.DS_Store

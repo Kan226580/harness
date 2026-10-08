@@ -22,9 +22,9 @@
 - 便于协作复核
 
 ## 技术栈
-后端：Python 3.12、FastAPI、PostgreSQL、Redis、Celery
-前端：React、TypeScript、Vite
-部署：Docker Compose、Nginx
+- 后端：Python 3.12、FastAPI、PostgreSQL、Redis、Celery
+- 前端：React、TypeScript、Vite
+- 部署：Docker Compose、Nginx
 
 ## 本地启动
 （随着开发进度补充）
