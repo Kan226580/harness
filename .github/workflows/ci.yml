@@ -1,0 +1,58 @@
+# CI 流水线：Python 后端静态检查、类型检查与单元测试
+# 检查范围由 pyproject.toml 中的 [tool.ruff] / [tool.mypy] 配置决定：
+#   Ruff -> 仓库根目录下的 Python 代码（排除 frontend、docs、deploy 等非 Python 目录）
+#   mypy -> backend 包（backend/app 应用代码 + backend/tests 测试）
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+    branches:
+      - master
+      - dev
+  workflow_dispatch:
+
+# 最小权限：CI 只需要读取仓库内容
+permissions:
+  contents: read
+
+# 同一分支上推送新提交时，取消仍在运行的旧任务，避免排队浪费时间
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: 后端质量门禁（ruff / mypy / pytest）
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v7
+
+      - name: 安装 uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: 安装 Python
+        run: uv python install
+
+      - name: 安装依赖
+        run: uv sync --locked
+
+      - name: Ruff 静态检查
+        run: uv run ruff check --output-format=github .
+
+      - name: Ruff 格式检查
+        run: uv run ruff format --check .
+
+      - name: mypy 类型检查
+        run: uv run mypy
+
+      - name: pytest 单元测试
+        run: uv run pytest -q
