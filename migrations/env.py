@@ -1,15 +1,13 @@
-import os
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
+
+from backend.app.core.settings import settings
 
 # ----- 1.导入 Base 和所有模型
 from backend.app.db.base import Base
-from backend.app.core.settings import settings
-import backend.app.models
+
 # -----
 
 # this is the Alembic Config object, which provides

@@ -79,7 +79,7 @@ class Organization(Base):
         nullable=False,
     )
 
-    users: Mapped[list["User"]] = relationship(
+    users: Mapped[list[User]] = relationship(
         back_populates="organization",
         cascade="all, delete-orphan",
     )
@@ -163,10 +163,10 @@ class User(Base):
         nullable=False,
     )
 
-    organization: Mapped["Organization"] = relationship(
+    organization: Mapped[Organization] = relationship(
         back_populates="users",
     )
-    sessions: Mapped[list["Session"]] = relationship(
+    sessions: Mapped[list[Session]] = relationship(
         back_populates="user",
         cascade="all, delete-orphan",
     )
@@ -232,7 +232,7 @@ class Session(Base):
         nullable=False,
     )
 
-    user: Mapped["User"] = relationship(back_populates="sessions")
+    user: Mapped[User] = relationship(back_populates="sessions")
 
     def __repr__(self) -> str:
         return f"<AuthSession id={self.id} user_id={self.user_id}>"

@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, SecretStr, Field, computed_field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, SecretStr, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # 项目根路径
