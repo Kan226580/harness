@@ -3,7 +3,7 @@ import hmac
 import secrets
 
 from argon2 import PasswordHasher
-from argon2.exceptions import VerifyMismatchError, VerificationError, InvalidHashError
+from argon2.exceptions import InvalidHashError, VerificationError, VerifyMismatchError
 
 from backend.app.core.settings import settings
 
