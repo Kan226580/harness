@@ -39,6 +39,7 @@ jobs:
       REDIS__DB: "0"
       REDIS__HASHED_PASSWORD: ci_only_not_a_secret
       HARNESS_TEST_DB_NAME: harness_test
+      SECURITY__CSRF_SIGNING_KEY: ci_only_signing_key_not_a_real_secret_0000
 
     services:
       postgres:

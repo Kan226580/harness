@@ -47,6 +47,16 @@ class RedisSettings(BaseModel):
         return f"redis://:{pwd}@{self.host}:{self.port}/{self.db}"
 
 
+class SecuritySettings(BaseModel):
+    """Security settings"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    csrf_signing_key: SecretStr = Field(..., min_length=32, description="CSRF 签名密钥")
+    session_ttl_hours: int = Field(default=12, ge=1, le=72, description="会话有效期（小时）")
+    public_origin: str = Field(default="http://127.0.0.1:8000", description="允许的同源地址")
+
+
 class Settings(BaseSettings):
     """应用配置根模型"""
 
@@ -61,6 +71,7 @@ class Settings(BaseSettings):
     env: EnvName = "prod"
     db: DbSettings
     redis: RedisSettings
+    security: SecuritySettings
 
 
 settings = Settings()
