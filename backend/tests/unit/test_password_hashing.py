@@ -9,15 +9,18 @@ def test_same_password_hashes_differ() -> None:
     assert first != second, "两次哈希必须不同，相同说明实现有问题"
     assert first.startswith("$argon2id$"), "哈希格式必须是 Argon2id"
 
+
 def test_verify_accepts_correct_password() -> None:
     """验证一个明文密码对应正确的哈希"""
     stored = hash_password("demo-passphrase-2026")
     assert verify_password("demo-passphrase-2026", stored) is True
 
+
 def test_verify_rejects_incorrect_password() -> None:
     """验证一个明文密码无法对应错误的哈希"""
     stored = hash_password("demo-passphrase-2026")
     assert verify_password("incorrect-passphrase", stored) is False
+
 
 def test_verify_rejects_broken_hash() -> None:
     """验证一个明文密码无法对应损坏的的哈希"""
