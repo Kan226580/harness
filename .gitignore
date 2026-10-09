@@ -1,7 +1,7 @@
 # Python 相关：虚拟环境、缓存、编译产物
 /.venv/
-/__pycache__/
-/*.pyc
+__pycache__/
+*.pyc
 /.pytest_cache/
 /.mypy_cache/
 /.ruff_cache/
@@ -12,7 +12,7 @@
 /coverage/
 
 # 环境与数据：密钥文件、日志、本地数据
-/.env
+.env
 /*.log
 /var/
 
