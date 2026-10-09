@@ -27,4 +27,27 @@
 - 部署：Docker Compose、Nginx
 
 ## 本地启动
-（随着开发进度补充）
+
+- Docker
+
+```bash
+docker compose -f deploy/compose.yaml up -d
+docker compose -f deploy/compose.yaml ps
+docker compose -f deploy/compose.yaml logs postgres
+```
+
+- FastAPI
+
+```bash
+uv run uvicorn backend.app.main:app --reload
+```
+
+## 代码质检
+
+- CI
+
+```bash
+uv run ruff format .
+uv run ruff format --check .
+uv run mypy
+```
