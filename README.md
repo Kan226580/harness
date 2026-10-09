@@ -31,9 +31,9 @@
 - Docker
 
 ```bash
-docker compose -f deploy/compose.yaml up -d
-docker compose -f deploy/compose.yaml ps
-docker compose -f deploy/compose.yaml logs postgres
+docker compose --env-file ./.env -f deploy/compose.yaml up -d
+docker compose --env-file ./.env -f deploy/compose.yaml ps
+docker compose --env-file ./.env -f deploy/compose.yaml logs postgres
 ```
 
 - FastAPI
