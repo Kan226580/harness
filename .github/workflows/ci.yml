@@ -1,7 +1,3 @@
-# CI 流水线：Python 后端静态检查、类型检查与单元测试
-# 检查范围由 pyproject.toml 中的 [tool.ruff] / [tool.mypy] 配置决定：
-#   Ruff -> 仓库根目录下的 Python 代码（排除 frontend、docs、deploy 等非 Python 目录）
-#   mypy -> backend 包（backend/app 应用代码 + backend/tests 测试）
 name: CI
 
 on:
@@ -73,6 +69,22 @@ jobs:
 
       - name: 安装依赖
         run: uv sync --locked
+
+      - name: 缓存 mypy
+        uses: actions/cache@v4
+        with:
+          path: .mypy_cache
+          key: ${{ runner.os }}-mypy-${{ hashFiles('**/pyproject.toml', '**/uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mypy-
+
+      - name: 缓存 pytest
+        uses: actions/cache@v4
+        with:
+          path: .pytest_cache
+          key: ${{ runner.os }}-pytest-${{ hashFiles('**/pyproject.toml', '**/uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pytest-
 
       - name: Ruff 静态检查
         run: uv run ruff check --output-format=github .
