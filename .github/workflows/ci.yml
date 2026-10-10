@@ -32,7 +32,7 @@ jobs:
       DB__PORT: "5432"
       DB__USERNAME: harness
       DB__HASHED_PASSWORD: dev_only_password
-      DB__DRIVER: postgresql+asyncpg
+      DB__DRIVER: postgresql+psycopg2
       DB__NAME: harness
       REDIS__HOST: 127.0.0.1
       REDIS__PORT: "6379"
