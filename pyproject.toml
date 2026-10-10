@@ -50,7 +50,8 @@ select = [
     "SIM", # flake8-simplify
 ]
 ignore = [
-    "E501", # 行长交给 ruff format / line-length 处理
+    "E501",
+    "B008"
 ]
 
 [tool.ruff.lint.isort]
