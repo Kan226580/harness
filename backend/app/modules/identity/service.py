@@ -130,42 +130,39 @@ def authenticate(
     organization_slug: str,
     email: str,
     password: str,
-) -> tuple[User, Organization | None]:
+) -> tuple[User, Organization]:
     """校验组织 + 邮箱 + 密码；任何失败都抛统一的 ApiError"""
+
+    # 组织不存在、被停用：统一失败 + 一次等价哈希运算
     organization = db.execute(
         select(Organization).where(Organization.slug == organization_slug.strip().lower())
     ).scalar_one_or_none()
-
-    user: User | None = None
-    if organization is not None and organization.is_active:
-        user = db.execute(
-            select(User).where(User.org_id == organization.id, User.email == normalize_email(email))
-        ).scalar_one_or_none()
-
-    now = _now()
+    if organization is None or not organization.is_active:
+        dummy_verify(password)
+        raise ApiError(401, "AUTHENTICATION_FAILED", LOGIN_FAILED_MESSAGE)
 
     # 组织/账号不存在、账号被停用：统一失败 + 一次等价哈希运算
+    user = db.execute(
+        select(User).where(User.org_id == organization.id, User.email == normalize_email(email))
+    ).scalar_one_or_none()
     if user is None or not user.is_active:
         dummy_verify(password)
         raise ApiError(401, "AUTHENTICATION_FAILED", LOGIN_FAILED_MESSAGE)
 
+    now = _now()
+
+    # 锁定期内：不论密码对错，统一返回锁定提示
+    if user.locked_until is not None and user.locked_until > now:
+        dummy_verify(password)
+        minutes = max(1, math.ceil((user.locked_until - now).total_seconds() / 60))
+        raise ApiError(401, "AUTHENTICATION_FAILED", f"账号已临时锁定，请在 {minutes} 分钟后重试")
+
     # 锁定期已过：清零计数，重新开始
-    if user.locked_until is not None and user.locked_until <= now:
+    if user.locked_until is not None:
         user.failed_login_count = 0
         user.locked_until = None
 
-    password_ok = verify_password(password, user.password_hash)
-
-    # 锁定期内：只有密码正确时才提示剩余时间，避免用锁定状态探测账号是否存在
-    if user.locked_until is not None and user.locked_until > now:
-        if password_ok:
-            minutes = max(1, math.ceil((user.locked_until - now).total_seconds() / 60))
-            raise ApiError(
-                401, "AUTHENTICATION_FAILED", f"账号已临时锁定，请在 {minutes} 分钟后重试"
-            )
-        raise ApiError(401, "AUTHENTICATION_FAILED", LOGIN_FAILED_MESSAGE)
-
-    if not password_ok:
+    if not verify_password(password, user.password_hash):
         _record_login_failure(db, user, now)
         raise ApiError(401, "AUTHENTICATION_FAILED", LOGIN_FAILED_MESSAGE)
 
